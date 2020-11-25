@@ -25,6 +25,7 @@ async function main () {
   const program = new Command();
 
   program.name('soundtrack');
+  program.option('--audio', 'Enable terminal audio.');
   program.option('--earn', 'Enable earning.');
   program.option('--seed', 'Load from mnemonic seed.');
   program.option('--xpub', 'Load from xpub.');
@@ -35,8 +36,14 @@ async function main () {
     SETTINGS.earn = true;
   }
 
+  // Enable Terminal Audio
+  if (program.audio) {
+    SETTINGS.audio = true;
+  }
+
   // Command Line Interface
   const cli = new CLI({
+    audio: SETTINGS.audio,
     earn: SETTINGS.earn,
     listen: true, // whether to open Fabric P2P port or not
     port: FABRIC_PORT,
