@@ -1,7 +1,5 @@
 'use strict';
 
-require('debug-trace')({ always: true });
-
 const Soundtrack = require('../types/soundtrack');
 const HTTPServer = require('@fabric/http/types/server');
 
@@ -9,9 +7,14 @@ const Stream = require('../types/stream');
 const settings = require('../settings/local');
 
 async function main () {
-  const soundtrack = new Soundtrack(); // TODO: load settings
+  const soundtrack = new Soundtrack(settings);
   const stream = new Stream(settings);
+
+  // TODO: usurp as optional service in `types/soundtrack`?
   const server = new HTTPServer({
+    components: {
+      "index": "soundtrack-splash"
+    },
     resources: {
       "User": {
         name: 'User'

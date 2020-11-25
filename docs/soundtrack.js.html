@@ -1,80 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="utf-8">
-  <title>Source: soundtrack.js &middot; Docs</title>
-  <script src="scripts/prettify/prettify.js"> </script>
-  <script src="scripts/prettify/lang-css.js"> </script>
-  <!--[if lt IE 9]>
+  <head>
+    <meta charset="utf-8">
+    <title>Source: soundtrack.js &middot; Docs</title>
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-  <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-  <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
-</head>
-
-<body>
-  <div id="main">
-    <h1 class="page-title">Source: soundtrack.js</h1>
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+  </head>
+  <body>
+    <div id="main"><h1 class="page-title">Source: soundtrack.js</h1>
 
 
 
-
+    
     <section>
-      <article>
-        <pre class="prettyprint source linenums"><code>'use strict';
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
 
 const Interface = require('@fabric/core/types/interface');
 const Remote = require('@fabric/core/types/remote');
 
+const Source = require('./source');
+
 /**
  * Implements the Soundtrack type.
- * @extends Interface
+ * @module @services/soundtrack
  */
 class Soundtrack extends Interface {
   /**
    * Create an instance of {@link Soundtrack}.
+   * @augments Interface
    * @param {Object} [settings] List of options.
    */
   constructor (settings = {}) {
     super(settings);
 
     this.settings = Object.assign({
-      name: '@fabric/soundtrack'
+      name: '@fabric/soundtrack',
+      authority: 'hub.fabric.pub',
+      socket: 'services/soundtrack.sock'
     }, this.settings, settings);
+
+    this.server = null;
+    this._state = {
+      rooms: {},
+      sources: {},
+      tracks: {},
+      users: {}
+    };
 
     return this;
   }
 
-  _loadURI (uri) {
-    const remote = new Remote(uri);
-    const request = remote._GET();
+  async _loadTrack (track) {
+    if (!track.sources) throw new Error('Track must have sources:', track);
 
+    const map = {};
+
+    for (let i = 0; i &lt; track.sources.length; i++) {
+      track.sources[i].map(async (x) => {
+        map[x.id] = new Source(x)
+        return map[x.id];
+      });
+    }
+
+    this.emit('message', `Loaded sources: ${JSON.stringify(map, null, '  ')}`);
+  }
+
+  async _loadURI (path) {
+    const remote = new Remote({
+      authority: this.settings.authority
+    });
+
+    const request = await remote._GET(path);
     this.emit('message', `Request: ${JSON.stringify(request, null, '  ')}`);
+  }
+
+  async start () {
+    this.emit('ready');
   }
 }
 
 module.exports = Soundtrack;
 </code></pre>
-      </article>
+        </article>
     </section>
 
 
 
-  </div>
-  <nav>
-    <h2><a href="index.html">Home</a></h2>
-    <h3>Classes</h3>
-    <ul>
-      <li><a href="Soundtrack.html">Soundtrack</a></li>
-    </ul>
-  </nav>
-  <br class="clear" />
-  <footer><a href="https://github.com/FabricLabs/soundtrack">git://</a> &middot; <a href="https://chat.fabric.pub/#/room/#soundtrack:fabric.pub">Community</a></footer>
-  <script type="text/javascript">
-    prettyPrint();
-  </script>
-  <script src="scripts/linenumber.js"></script>
-</body>
-
+</div>
+    <nav><h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-@services_soundtrack.html">@services/soundtrack</a></li></ul><h3>Classes</h3><ul><li><a href="module-@services_soundtrack-Soundtrack.html">Soundtrack</a></li></ul></nav>
+    <br class="clear" />
+    <footer><a href="https://github.com/FabricLabs/soundtrack">git://</a> &middot; <a href="https://chat.fabric.pub/#/room/#soundtrack:fabric.pub">Community</a></footer>
+    <script type="text/javascript">
+      prettyPrint();
+    </script>
+    <script src="scripts/linenumber.js"></script>
+  </body>
 </html>
