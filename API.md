@@ -9,13 +9,13 @@
 ## Classes
 
 <dl>
-<dt><a href="#Interface">Interface</a> ⇐ <code>EventEmitter</code></dt>
-<dd><p>Interfaces compile abstract contract code into <a href="#Chain">Chain</a>-executable transactions, or &quot;chaincode&quot;. For example, the &quot;Bitcoin&quot; interface might compile a Swap contract into Script, preparing a valid Bitcoin transaction for broadcast which executes the swap contract.</p>
-</dd>
 <dt><a href="#Chain">Chain</a></dt>
 <dd><p>Chain.</p>
 </dd>
-<dt><a href="#State">State</a></dt>
+<dt><a href="#Interface">Interface</a> ⇐ <code>EventEmitter</code></dt>
+<dd><p>Interfaces compile abstract contract code into <a href="#Chain">Chain</a>-executable transactions, or &quot;chaincode&quot;. For example, the &quot;Bitcoin&quot; interface might compile a Swap contract into Script, preparing a valid Bitcoin transaction for broadcast which executes the swap contract.</p>
+</dd>
+<dt><a href="#State">State</a> ⇐ <code>EventEmitter</code></dt>
 <dd><p>The <a href="#State">State</a> is the core of most <a href="User">User</a>-facing interactions.  To
 interact with the <a href="User">User</a>, simply propose a change in the state by
 committing to the outcome.  This workflow keeps app design quite simple!</p>
@@ -75,6 +75,7 @@ Getter for [State](#State).
 Start the [Interface](#Interface).
 
 **Kind**: instance method of [<code>Soundtrack</code>](#module_@services/soundtrack..Soundtrack)  
+**Overrides**: [<code>start</code>](#Interface+start)  
 <a name="Interface+stop"></a>
 
 #### soundtrack.stop()
@@ -109,6 +110,31 @@ Log some output to the console.
 Returns current timestamp.
 
 **Kind**: instance method of [<code>Soundtrack</code>](#module_@services/soundtrack..Soundtrack)  
+<a name="Chain"></a>
+
+## Chain
+Chain.
+
+**Kind**: global class  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| name | <code>String</code> | Current name. |
+| indices | <code>Map</code> |  |
+| ledger | <code>Ledger</code> |  |
+| storage | <code>Storage</code> |  |
+
+<a name="new_Chain_new"></a>
+
+### new Chain(genesis)
+Holds an immutable chain of events.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| genesis | <code>Vector</code> | Initial state for the chain of events. |
+
 <a name="Interface"></a>
 
 ## Interface ⇐ <code>EventEmitter</code>
@@ -189,39 +215,15 @@ Log some output to the console.
 Returns current timestamp.
 
 **Kind**: instance method of [<code>Interface</code>](#Interface)  
-<a name="Chain"></a>
-
-## Chain
-Chain.
-
-**Kind**: global class  
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| name | <code>String</code> | Current name. |
-| indices | <code>Map</code> |  |
-| ledger | <code>Ledger</code> |  |
-| storage | <code>Storage</code> |  |
-
-<a name="new_Chain_new"></a>
-
-### new Chain(genesis)
-Holds an immutable chain of events.
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| genesis | <code>Vector</code> | Initial state for the chain of events. |
-
 <a name="State"></a>
 
-## State
+## State ⇐ <code>EventEmitter</code>
 The [State](#State) is the core of most [User](User)-facing interactions.  To
 interact with the [User](User), simply propose a change in the state by
 committing to the outcome.  This workflow keeps app design quite simple!
 
 **Kind**: global class  
+**Extends**: <code>EventEmitter</code>  
 **Properties**
 
 | Name | Type | Description |
@@ -233,9 +235,10 @@ committing to the outcome.  This workflow keeps app design quite simple!
 | @id | <code>String</code> | Unique identifier for this data. |
 
 
-* [State](#State)
+* [State](#State) ⇐ <code>EventEmitter</code>
     * [new State(data)](#new_State_new)
     * _instance_
+        * [.id](#State+id) : <code>Boolean</code>
         * [.toString()](#State+toString) ⇒ <code>String</code>
         * [.serialize([input])](#State+serialize) ⇒ <code>Buffer</code>
         * [.deserialize(input)](#State+deserialize) ⇒ [<code>State</code>](#State)
@@ -258,6 +261,12 @@ Creates a snapshot of some information.
 | --- | --- | --- |
 | data | <code>Mixed</code> | Input data. |
 
+<a name="State+id"></a>
+
+### state.id : <code>Boolean</code>
+Identity function.
+
+**Kind**: instance property of [<code>State</code>](#State)  
 <a name="State+toString"></a>
 
 ### state.toString() ⇒ <code>String</code>

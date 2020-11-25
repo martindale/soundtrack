@@ -1,0 +1,11 @@
+.ui.segment
+  .ui.card
+    h3.header Soundtrack
+    p music for everyone.
+
+.ui.segment
+  h3.header Rooms
+  .ui.list
+    each rooms as room
+      .item
+        code #{JSON.stringify(room, null, '  )}
