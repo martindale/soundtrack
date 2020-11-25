@@ -35,7 +35,7 @@
   "license": "MIT",
   "dependencies": {
     "@fabric/core": "martindale/fabric#peering-wallet",
-    "@fabric/http": "martindale/web#forge-demo-develop",
+    "@fabric/http": "martindale/web#soundtrack-demo-develop",
     "blessed": "^0.1.81",
     "canvas": "^2.6.1",
     "commander": "^6.1.0"
